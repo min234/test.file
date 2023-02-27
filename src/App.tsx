@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 const data = [
   {
@@ -70,13 +70,18 @@ const data = [
 ]
 
 function App() {
-  const [slider,setSlider] = useState(0)
-
 
   const [search,setSearch] = useState('')
 
+
+
+console.log(search)
+
   const filterTitle =data.filter((p) => {
-    return  p.name.replace(" ","").toLocaleLowerCase().includes(search.toLocaleLowerCase().replace(" ",""))
+   
+    return   p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.address.toLowerCase().includes(search.toLowerCase()) ||
+    p.category.toLowerCase().includes(search.toLowerCase())
 })
   const onChange = (e : any) => {
     setSearch(e.target.value)

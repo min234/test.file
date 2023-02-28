@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useDebounce  from './useDebounce';
 import './App.css';
 const data = [
   {
@@ -70,31 +71,39 @@ const data = [
 ]
 
 function App() {
-
+  
+  const [value, setValue] = useState<string>('')
+  const debouncedValue = useDebounce<string>(value, 500)
   const [search,setSearch] = useState('')
+  const [loading,setLoading] = useState(false)
 
-
-
-console.log(search)
+  const s = search.trim()
 
   const filterTitle =data.filter((p) => {
-   
-    return   p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.address.toLowerCase().includes(search.toLowerCase()) ||
-    p.category.toLowerCase().includes(search.toLowerCase())
+    return   p.name.toLowerCase().includes(s.toLowerCase()) ||
+    p.address.toLowerCase() .includes(s.toLowerCase()) ||
+    p.category.toLowerCase(). includes(s.toLowerCase()) ||
+    debouncedValue
 })
   const onChange = (e : any) => {
     setSearch(e.target.value)
+    setLoading(true)
 }
+
+ 
+ useEffect(()=>{
+   console.log(search)
+},[search]);
+
   return (
     <div className="App">
       <div className="a">
-        {data.map((e) => (
+        {filterTitle.map((e) => (
           <div className="id" key={e.id}>
             <div className='number'>{e.id}</div>
             <div className ='name'>{e.name}</div>
             <div className = 'address'>{e.address}</div>
-            <div className = ' category'>{e. category}</div>
+            <div className = ' category'>{e. category }</div>
          
             </div>
         ))}
@@ -102,6 +111,7 @@ console.log(search)
       </div>
    
       <input className='search' value={search} onChange={onChange} placeholder='작가명 작품명 입력 '></input>
+      {loading && <p>aa</p>}
       <div className="a">
         {filterTitle.map((e) => (
           <div className="id" key={e.id}>
@@ -118,3 +128,6 @@ console.log(search)
 }
 
 export default App;
+
+
+
